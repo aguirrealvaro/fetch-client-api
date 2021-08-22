@@ -6,6 +6,7 @@ type UseRequestReturnType<DataType> = {
   data: DataType | undefined;
   isFetching: boolean;
   error: ErrorResponse | undefined;
+  clearErrors: () => void;
 };
 
 export const useRequest = <DataType = unknown>(url: string): UseRequestReturnType<DataType> => {
@@ -30,5 +31,10 @@ export const useRequest = <DataType = unknown>(url: string): UseRequestReturnTyp
     }
   }, [url]);
 
-  return { dispatch, data, isFetching, error };
+  const clearErrors = useCallback(() => {
+    if (!error) return;
+    setError(undefined);
+  }, [error]);
+
+  return { dispatch, data, isFetching, error, clearErrors };
 };

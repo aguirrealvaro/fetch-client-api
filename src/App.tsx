@@ -18,15 +18,18 @@ export const App: FunctionComponent = () => {
     isFetching,
     error,
     dispatch,
+    clearErrors,
   } = useRequest<UsersResponse>("http://localhost:4000/api/user/getall");
 
-  if (isFetching) return <>Loading...</>;
-  if (error) return <>Error</>;
+  console.log(error);
 
   return (
     <>
       <button onClick={() => dispatch()}>boton</button>
+      <button onClick={() => clearErrors()}>Clear errors</button>
       <>
+        {isFetching && "fetching"}
+        {error && "error"}
         {users?.map((user) => (
           <div key={user.name}>{user.name}</div>
         ))}

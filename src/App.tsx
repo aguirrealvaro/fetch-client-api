@@ -1,4 +1,5 @@
 import React, { FunctionComponent } from "react";
+import { getUsers } from "./client/endpoints";
 import { useRequest } from "./client/useRequest";
 
 type UsersResponse = {
@@ -22,7 +23,7 @@ export const App: FunctionComponent = () => {
     error,
     dispatch,
     clearErrors,
-  } = useRequest<UsersResponse>("http://localhost:4000/api/user/getall", {
+  } = useRequest<UsersResponse>(getUsers(), {
     onReceive,
     onFailure,
   });

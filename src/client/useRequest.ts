@@ -1,10 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { ErrorResponse } from "./types";
-
-type OptionsType = {
-  onReceive?: () => void;
-  onFailure?: () => void;
-};
+import { EndpointType, ErrorResponse, OptionsType } from "./types";
 
 type UseRequestReturnType<DataType> = {
   dispatch: () => Promise<void>;
@@ -15,7 +10,7 @@ type UseRequestReturnType<DataType> = {
 };
 
 export const useRequest = <DataType = unknown>(
-  url: string,
+  { url, method }: EndpointType,
   { onReceive, onFailure }: OptionsType = {}
 ): UseRequestReturnType<DataType> => {
   const [data, setData] = useState<DataType | undefined>(undefined);
@@ -25,7 +20,9 @@ export const useRequest = <DataType = unknown>(
   const dispatch = useCallback(async () => {
     setIsFetching(true);
     try {
-      const response = await fetch(url);
+      const config = { method };
+
+      const response = await fetch(url, config);
       const data = await response.json();
 
       if (response.ok) {
@@ -37,7 +34,7 @@ export const useRequest = <DataType = unknown>(
     } catch (err) {
       setIsFetching(false);
     }
-  }, [url]);
+  }, [method, url]);
 
   const clearErrors = useCallback(() => {
     if (!error) return;

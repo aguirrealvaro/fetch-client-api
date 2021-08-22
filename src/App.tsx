@@ -22,12 +22,17 @@ export const App: FunctionComponent = () => {
   const onReceive = () => console.log("onReceive");
   const onFailure = () => console.log("onFailure");
 
-  const body = {
+  /* const body = {
     email: "alva@gmail.com",
     password: "1234",
   };
 
   const { data, isFetching, error, dispatch, clearErrors } = useRequest(login<BodyType>(body), {
+    onReceive,
+    onFailure,
+  }); */
+
+  const { data, isFetching, error, dispatch, clearErrors } = useRequest<UsersResponse>(getUsers(), {
     onReceive,
     onFailure,
   });

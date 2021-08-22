@@ -13,7 +13,8 @@ type UsersResponse = {
 }[];
 
 export const App: FunctionComponent = () => {
-  const onReceive = useCallback(() => console.log("On receive"), []);
+  const onReceive = () => console.log("onReceive");
+  const onFailure = () => console.log("onFailure");
 
   const {
     data: users,
@@ -23,6 +24,7 @@ export const App: FunctionComponent = () => {
     clearErrors,
   } = useRequest<UsersResponse>("http://localhost:4000/api/user/getall", {
     onReceive,
+    onFailure,
   });
 
   return (

@@ -47,7 +47,14 @@ export const useRequest = <DataType = unknown>(
   useEffect(() => {
     if (!data) return;
     onReceive?.();
-  }, [data, onReceive]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  useEffect(() => {
+    if (!error) return;
+    onFailure?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
 
   return { dispatch, data, isFetching, error, clearErrors };
 };

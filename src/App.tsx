@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useCallback } from "react";
 import { useRequest } from "./client/useRequest";
 
 type UsersResponse = {
@@ -13,15 +13,17 @@ type UsersResponse = {
 }[];
 
 export const App: FunctionComponent = () => {
+  const onReceive = useCallback(() => console.log("On receive"), []);
+
   const {
     data: users,
     isFetching,
     error,
     dispatch,
     clearErrors,
-  } = useRequest<UsersResponse>("http://localhost:4000/api/user/getall");
-
-  console.log(error);
+  } = useRequest<UsersResponse>("http://localhost:4000/api/user/getall", {
+    onReceive,
+  });
 
   return (
     <>

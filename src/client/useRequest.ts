@@ -1,5 +1,10 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { ErrorResponse } from "./types";
+
+type OptionsType = {
+  onReceive?: () => void;
+  onFailure?: () => void;
+};
 
 type UseRequestReturnType<DataType> = {
   dispatch: () => Promise<void>;
@@ -9,7 +14,10 @@ type UseRequestReturnType<DataType> = {
   clearErrors: () => void;
 };
 
-export const useRequest = <DataType = unknown>(url: string): UseRequestReturnType<DataType> => {
+export const useRequest = <DataType = unknown>(
+  url: string,
+  { onReceive, onFailure }: OptionsType = {}
+): UseRequestReturnType<DataType> => {
   const [data, setData] = useState<DataType | undefined>(undefined);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [error, setError] = useState<ErrorResponse | undefined>(undefined);
@@ -35,6 +43,11 @@ export const useRequest = <DataType = unknown>(url: string): UseRequestReturnTyp
     if (!error) return;
     setError(undefined);
   }, [error]);
+
+  useEffect(() => {
+    if (!data) return;
+    onReceive?.();
+  }, [data, onReceive]);
 
   return { dispatch, data, isFetching, error, clearErrors };
 };

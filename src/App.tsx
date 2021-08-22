@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { getUsers } from "./client/endpoints";
+import { getUsers, login } from "./client/endpoints";
 import { useRequest } from "./client/useRequest";
 
 type UsersResponse = {
@@ -13,17 +13,21 @@ type UsersResponse = {
   surname: string;
 }[];
 
+type BodyType = {
+  email: string;
+  password: string;
+};
+
 export const App: FunctionComponent = () => {
   const onReceive = () => console.log("onReceive");
   const onFailure = () => console.log("onFailure");
 
-  const {
-    data: users,
-    isFetching,
-    error,
-    dispatch,
-    clearErrors,
-  } = useRequest<UsersResponse>(getUsers(), {
+  const body = {
+    email: "alva@gmail.com",
+    password: "1234",
+  };
+
+  const { data, isFetching, error, dispatch, clearErrors } = useRequest(login<BodyType>(body), {
     onReceive,
     onFailure,
   });
@@ -34,10 +38,8 @@ export const App: FunctionComponent = () => {
       <button onClick={() => clearErrors()}>Clear errors</button>
       <>
         {isFetching && "fetching"}
-        {error && "error"}
-        {users?.map((user) => (
-          <div key={user.name}>{user.name}</div>
-        ))}
+        {error && JSON.stringify(error)}
+        {data && JSON.stringify(data)}
       </>
     </>
   );

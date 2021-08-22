@@ -10,7 +10,7 @@ type UseRequestReturnType<DataType> = {
 };
 
 export const useRequest = <DataType = unknown>(
-  { url, method }: EndpointType,
+  { url, method, body }: EndpointType,
   { onReceive, onFailure }: OptionsType = {}
 ): UseRequestReturnType<DataType> => {
   const [data, setData] = useState<DataType | undefined>(undefined);
@@ -20,7 +20,8 @@ export const useRequest = <DataType = unknown>(
   const dispatch = useCallback(async () => {
     setIsFetching(true);
     try {
-      const config = { method };
+      const headers = { "Content-Type": "application/json" };
+      const config = { method, headers, body };
 
       const response = await fetch(`${process.env.API_HOST}/${url}`, config);
       const data = await response.json();
@@ -34,7 +35,7 @@ export const useRequest = <DataType = unknown>(
     } catch (err) {
       setIsFetching(false);
     }
-  }, [method, url]);
+  }, [body, method, url]);
 
   const clearErrors = useCallback(() => {
     if (!error) return;

@@ -22,7 +22,7 @@ export const useRequest = <DataType = unknown>(
     try {
       const config = { method };
 
-      const response = await fetch(url, config);
+      const response = await fetch(`${process.env.API_HOST}/${url}`, config);
       const data = await response.json();
 
       if (response.ok) {

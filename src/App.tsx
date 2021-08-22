@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useCallback } from "react";
+import React, { FunctionComponent } from "react";
 import { useRequest } from "./client/useRequest";
 
 type UsersResponse = {

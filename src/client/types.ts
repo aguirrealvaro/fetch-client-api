@@ -13,5 +13,4 @@ export type MethodType = "GET" | "POST" | "PUT" | "DELETE";
 export type EndpointType = {
   url: string;
   method: MethodType;
-  body?: string;
 };

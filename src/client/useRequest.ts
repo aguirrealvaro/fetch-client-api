@@ -1,41 +1,44 @@
 import { useState, useCallback, useEffect } from "react";
 import { EndpointType, ErrorResponse, OptionsType } from "./types";
 
-type UseRequestReturnType<DataType> = {
-  dispatch: () => Promise<void>;
-  data: DataType | undefined;
+type UseRequestReturnType<ResponseType, BodyType> = {
+  dispatch: (body: BodyType) => Promise<void>;
+  data: ResponseType | undefined;
   isFetching: boolean;
   error: ErrorResponse | undefined;
   clearErrors: () => void;
 };
 
-export const useRequest = <DataType = unknown>(
-  { url, method, body }: EndpointType,
+export const useRequest = <ResponseType = unknown, BodyType = unknown>(
+  { url, method }: EndpointType,
   { onReceive, onFailure }: OptionsType = {}
-): UseRequestReturnType<DataType> => {
-  const [data, setData] = useState<DataType | undefined>(undefined);
+): UseRequestReturnType<ResponseType, BodyType> => {
+  const [data, setData] = useState<ResponseType | undefined>(undefined);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [error, setError] = useState<ErrorResponse | undefined>(undefined);
 
-  const dispatch = useCallback(async () => {
-    setIsFetching(true);
-    try {
-      const headers = { "Content-Type": "application/json" };
-      const config = { method, headers, body };
+  const dispatch = useCallback(
+    async (body: BodyType) => {
+      setIsFetching(true);
+      try {
+        const headers = { "Content-Type": "application/json" };
+        const config = { method, headers, body: JSON.stringify(body) };
 
-      const response = await fetch(`${process.env.API_HOST}/${url}`, config);
-      const data = await response.json();
+        const response = await fetch(`${process.env.API_HOST}/${url}`, config);
+        const data = await response.json();
 
-      if (response.ok) {
-        setData(data);
-      } else {
-        setError({ statusCode: response.status, originalError: data });
+        if (response.ok) {
+          setData(data);
+        } else {
+          setError({ statusCode: response.status, originalError: data });
+        }
+        setIsFetching(false);
+      } catch (err) {
+        setIsFetching(false);
       }
-      setIsFetching(false);
-    } catch (err) {
-      setIsFetching(false);
-    }
-  }, [body, method, url]);
+    },
+    [method, url]
+  );
 
   const clearErrors = useCallback(() => {
     if (!error) return;

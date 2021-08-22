@@ -5,8 +5,7 @@ export const getUsers = (): EndpointType => ({
   method: "GET",
 });
 
-export const login = <BodyType>(body: BodyType): EndpointType => ({
+export const login: EndpointType = {
   url: "user/login",
   method: "POST",
-  body: JSON.stringify(body),
-});
+};

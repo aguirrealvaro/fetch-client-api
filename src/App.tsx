@@ -1,6 +1,5 @@
-import React, { FunctionComponent, useEffect } from "react";
-//import { useRequest } from "./client/useRequest";
-import { useRequest } from "./client/useRequest2";
+import React, { FunctionComponent } from "react";
+import { useRequest } from "./client/useRequest";
 
 type UsersResponse = {
   avatar: string;
@@ -15,24 +14,23 @@ type UsersResponse = {
 
 export const App: FunctionComponent = () => {
   const {
-    dispatch,
     data: users,
     isFetching,
     error,
+    dispatch,
   } = useRequest<UsersResponse>("http://localhost:4000/api/user/getall");
-
-  useEffect(() => {
-    dispatch();
-  }, [dispatch]);
 
   if (isFetching) return <>Loading...</>;
   if (error) return <>Error</>;
 
   return (
     <>
-      {users?.map((user) => (
-        <>{user.name}</>
-      ))}
+      <button onClick={() => dispatch()}>boton</button>
+      <>
+        {users?.map((user) => (
+          <div key={user.name}>{user.name}</div>
+        ))}
+      </>
     </>
   );
 };

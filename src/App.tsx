@@ -1,5 +1,4 @@
 import React, { FunctionComponent } from "react";
-import { getUsers, login } from "./client/endpoints";
 import { useRequest } from "./client/useRequest";
 
 type UsersResponse = {
@@ -32,7 +31,7 @@ export const App: FunctionComponent = () => {
   const onReceive = () => console.log("onReceive");
   const onFailure = () => console.log("onFailure");
 
-  /*  const { data, isFetching, error, dispatch, clearErrors } = useRequest<UsersResponse>(getUsers(), {
+  /* const { data, isFetching, error, dispatch, clearErrors } = useRequest<UsersResponse>("user/all", {
     onReceive,
     onFailure,
   }); */
@@ -40,12 +39,17 @@ export const App: FunctionComponent = () => {
   const body = {
     email: "alva@gmail.com",
     password: "1234",
+    method: "POST",
   };
 
-  const { data, isFetching, error, dispatch, clearErrors } = useRequest<LoginResponseType, BodyType>(login, {
-    onReceive,
-    onFailure,
-  });
+  const { data, isFetching, error, dispatch, clearErrors } = useRequest<LoginResponseType, BodyType>(
+    "user/login",
+    {
+      onReceive,
+      onFailure,
+      method: "POST",
+    }
+  );
 
   return (
     <>
@@ -54,7 +58,7 @@ export const App: FunctionComponent = () => {
       <>
         {isFetching && "fetching"}
         {error && JSON.stringify(error)}
-        {data && data.token}
+        {data && JSON.stringify(data)}
       </>
     </>
   );

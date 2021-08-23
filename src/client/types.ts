@@ -6,11 +6,7 @@ export type ErrorResponse = {
 export type OptionsType = {
   onReceive?: () => void;
   onFailure?: () => void;
+  method?: MethodType;
 };
 
 export type MethodType = "GET" | "POST" | "PUT" | "DELETE";
-
-export type EndpointType = {
-  url: string;
-  method: MethodType;
-};

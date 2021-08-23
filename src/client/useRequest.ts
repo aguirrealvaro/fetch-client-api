@@ -1,8 +1,8 @@
 import { useState, useCallback, useEffect } from "react";
-import { EndpointType, ErrorResponse, OptionsType } from "./types";
+import { ErrorResponse, OptionsType } from "./types";
 
 type UseRequestReturnType<ResponseType, BodyType> = {
-  dispatch: (body: BodyType) => Promise<void>;
+  dispatch: (body?: BodyType) => Promise<void>;
   data: ResponseType | undefined;
   isFetching: boolean;
   error: ErrorResponse | undefined;
@@ -10,19 +10,19 @@ type UseRequestReturnType<ResponseType, BodyType> = {
 };
 
 export const useRequest = <ResponseType = unknown, BodyType = unknown>(
-  { url, method }: EndpointType,
-  { onReceive, onFailure }: OptionsType = {}
+  url: string,
+  { onReceive, onFailure, method = "GET" }: OptionsType = {}
 ): UseRequestReturnType<ResponseType, BodyType> => {
   const [data, setData] = useState<ResponseType | undefined>(undefined);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [error, setError] = useState<ErrorResponse | undefined>(undefined);
 
   const dispatch = useCallback(
-    async (body: BodyType) => {
+    async (body?: BodyType) => {
       setIsFetching(true);
       try {
         const headers = { "Content-Type": "application/json" };
-        const config = { method, headers, body: JSON.stringify(body) };
+        const config = { method, headers, ...(body && { body: JSON.stringify(body) }) };
 
         const response = await fetch(`${process.env.API_HOST}/${url}`, config);
         const data = await response.json();

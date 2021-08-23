@@ -1,20 +1,9 @@
 import React, { FunctionComponent } from "react";
 import { useRequest } from "./client/useRequest";
 
-type UsersResponse = {
-  avatar: string;
-  createdAt: string;
-  email: string;
-  level: number;
-  name: string;
-  password: string;
-  points: number;
-  surname: string;
-}[];
-
 type BodyType = {
   email: string;
-  password: string;
+  password?: string;
 };
 
 type LoginResponseType = {
@@ -27,37 +16,34 @@ type LoginResponseType = {
   avatar: string;
 };
 
+type ErrorResponseType = {
+  errors: {
+    email?: string;
+    password?: string;
+  };
+};
+
 export const App: FunctionComponent = () => {
   const onReceive = () => console.log("onReceive");
   const onFailure = () => console.log("onFailure");
 
-  /* const { data, isFetching, error, dispatch, clearErrors } = useRequest<UsersResponse>("user/all", {
-    onReceive,
-    onFailure,
-  }); */
-
-  /* const body = {
+  const body = {
     email: "alva@gmail.com",
-    password: "1234",
-    method: "POST",
   };
 
-  const { data, isFetching, error, dispatch, clearErrors } = useRequest<LoginResponseType, BodyType>(
-    "user/login",
-    {
-      onReceive,
-      onFailure,
-      method: "POST",
-    }
-  ); */
-
-  const { data, isFetching, error, dispatch, clearErrors } = useRequest<LoginResponseType, BodyType>(
-    "user/current"
-  );
+  const { data, isFetching, error, dispatch, clearErrors } = useRequest<
+    LoginResponseType,
+    BodyType,
+    ErrorResponseType
+  >("user/login", {
+    onReceive,
+    onFailure,
+    method: "POST",
+  });
 
   return (
     <>
-      <button onClick={() => dispatch()}>boton</button>
+      <button onClick={() => dispatch(body)}>boton</button>
       <button onClick={() => clearErrors()}>Clear errors</button>
       <>
         {isFetching && "fetching"}

@@ -1,6 +1,6 @@
-export type ErrorResponse = {
+export type ErrorResponse<ErrorResponseType = unknown> = {
   statusCode: number;
-  originalError: unknown;
+  originalError: ErrorResponseType;
 };
 
 export type OptionsType = {

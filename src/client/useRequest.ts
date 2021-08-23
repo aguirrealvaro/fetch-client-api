@@ -1,6 +1,8 @@
 import { useState, useCallback, useEffect } from "react";
 import { ErrorResponse, OptionsType } from "./types";
 
+const LOCAL_STORAGE_KEY = "localStorageKey";
+
 type UseRequestReturnType<ResponseType, BodyType> = {
   dispatch: (body?: BodyType) => Promise<void>;
   data: ResponseType | undefined;
@@ -17,11 +19,17 @@ export const useRequest = <ResponseType = unknown, BodyType = unknown>(
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [error, setError] = useState<ErrorResponse | undefined>(undefined);
 
+  const token = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+
   const dispatch = useCallback(
     async (body?: BodyType) => {
       setIsFetching(true);
       try {
-        const headers = { "Content-Type": "application/json" };
+        const headers = {
+          "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        };
+
         const config = { method, headers, ...(body && { body: JSON.stringify(body) }) };
 
         const response = await fetch(`${process.env.API_HOST}/${url}`, config);
@@ -34,10 +42,12 @@ export const useRequest = <ResponseType = unknown, BodyType = unknown>(
         }
         setIsFetching(false);
       } catch (err) {
+        console.log(err);
+        setError({ statusCode: 0, originalError: err.message });
         setIsFetching(false);
       }
     },
-    [method, url]
+    [method, token, url]
   );
 
   const clearErrors = useCallback(() => {
@@ -48,13 +58,11 @@ export const useRequest = <ResponseType = unknown, BodyType = unknown>(
   useEffect(() => {
     if (!data) return;
     onReceive?.();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   useEffect(() => {
     if (!error) return;
     onFailure?.();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
   return { dispatch, data, isFetching, error, clearErrors };

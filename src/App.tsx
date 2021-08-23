@@ -36,7 +36,7 @@ export const App: FunctionComponent = () => {
     onFailure,
   }); */
 
-  const body = {
+  /* const body = {
     email: "alva@gmail.com",
     password: "1234",
     method: "POST",
@@ -49,11 +49,15 @@ export const App: FunctionComponent = () => {
       onFailure,
       method: "POST",
     }
+  ); */
+
+  const { data, isFetching, error, dispatch, clearErrors } = useRequest<LoginResponseType, BodyType>(
+    "user/current"
   );
 
   return (
     <>
-      <button onClick={() => dispatch(body)}>boton</button>
+      <button onClick={() => dispatch()}>boton</button>
       <button onClick={() => clearErrors()}>Clear errors</button>
       <>
         {isFetching && "fetching"}

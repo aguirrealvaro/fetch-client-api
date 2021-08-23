@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { useRequest } from "./client/useRequest";
+import { useRequest } from "@/client";
 
 type UsersResponse = {
   avatar: string;

@@ -8,6 +8,7 @@ export type OptionsType = {
   onFailure?: () => void;
   method?: MethodType;
   intialFetch?: boolean;
+  refetchInterval?: number;
 };
 
 export type MethodType = "GET" | "POST" | "PUT" | "DELETE";

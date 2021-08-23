@@ -12,9 +12,9 @@ type UsersResponse = {
   surname: string;
 }[];
 
-/* type BodyType = {
+type BodyType = {
   email: string;
-  password?: string;
+  password: string;
 };
 
 type LoginResponseType = {
@@ -32,17 +32,18 @@ type ErrorResponseType = {
     email?: string;
     password?: string;
   };
-}; */
+};
 
 export const App: FunctionComponent = () => {
   const onReceive = () => console.log("onReceive");
   const onFailure = () => console.log("onFailure");
 
-  /* const body = {
+  const body = {
     email: "alva@gmail.com",
+    password: "1234",
   };
 
-   const { data, isFetching, error, dispatch, clearErrors } = useRequest<
+  const { data, isFetching, error, dispatch, clearErrors } = useRequest<
     LoginResponseType,
     BodyType,
     ErrorResponseType
@@ -50,17 +51,18 @@ export const App: FunctionComponent = () => {
     onReceive,
     onFailure,
     method: "POST",
-  }); */
+  });
 
-  const { data, isFetching, error, dispatch, clearErrors } = useRequest<UsersResponse>("user/all", {
+  /* const { data, isFetching, error, dispatch, clearErrors } = useRequest<UsersResponse>("user/all", {
     onReceive,
     onFailure,
     intialFetch: true,
-  });
+    refetchInterval: 5000,
+  }); */
 
   return (
     <>
-      <button onClick={() => dispatch()}>boton</button>
+      <button onClick={() => dispatch(body)}>boton</button>
       <button onClick={() => clearErrors()}>Clear errors</button>
       <>
         {isFetching && "fetching"}

@@ -13,7 +13,7 @@ type UseRequestReturnType<ResponseType, BodyType, ErrorResponseType> = {
 
 export const useRequest = <ResponseType = unknown, BodyType = unknown, ErrorResponseType = unknown>(
   url: string,
-  { onReceive, onFailure, method = "GET", intialFetch = false }: OptionsType = {}
+  { onReceive, onFailure, method = "GET", intialFetch = false, refetchInterval }: OptionsType = {}
 ): UseRequestReturnType<ResponseType, BodyType, ErrorResponseType> => {
   const [data, setData] = useState<ResponseType | undefined>(undefined);
   const [isFetching, setIsFetching] = useState<boolean>(false);
@@ -59,6 +59,15 @@ export const useRequest = <ResponseType = unknown, BodyType = unknown, ErrorResp
     if (!error) return;
     setError(undefined);
   }, [error]);
+
+  useEffect(() => {
+    if (!intialFetch || !refetchInterval) return;
+    const timeoutId = setInterval(() => {
+      dispatch();
+    }, refetchInterval);
+
+    return () => clearInterval(timeoutId);
+  }, [dispatch, intialFetch, refetchInterval]);
 
   useEffect(() => {
     if (!data) return;

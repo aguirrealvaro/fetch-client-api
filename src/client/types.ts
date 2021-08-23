@@ -7,6 +7,7 @@ export type OptionsType = {
   onReceive?: () => void;
   onFailure?: () => void;
   method?: MethodType;
+  intialFetch?: boolean;
 };
 
 export type MethodType = "GET" | "POST" | "PUT" | "DELETE";

@@ -13,7 +13,7 @@ type UseRequestReturnType<ResponseType, BodyType, ErrorResponseType> = {
 
 export const useRequest = <ResponseType = unknown, BodyType = unknown, ErrorResponseType = unknown>(
   url: string,
-  { onReceive, onFailure, method = "GET" }: OptionsType = {}
+  { onReceive, onFailure, method = "GET", intialFetch = false }: OptionsType = {}
 ): UseRequestReturnType<ResponseType, BodyType, ErrorResponseType> => {
   const [data, setData] = useState<ResponseType | undefined>(undefined);
   const [isFetching, setIsFetching] = useState<boolean>(false);
@@ -49,6 +49,11 @@ export const useRequest = <ResponseType = unknown, BodyType = unknown, ErrorResp
     },
     [method, token, url]
   );
+
+  useEffect(() => {
+    if (!intialFetch) return;
+    dispatch();
+  }, [dispatch, intialFetch]);
 
   const clearErrors = useCallback(() => {
     if (!error) return;

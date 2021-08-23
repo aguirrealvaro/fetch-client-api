@@ -1,7 +1,18 @@
 import React, { FunctionComponent } from "react";
 import { useRequest } from "./client/useRequest";
 
-type BodyType = {
+type UsersResponse = {
+  avatar: string;
+  createdAt: string;
+  email: string;
+  level: number;
+  name: string;
+  password: string;
+  points: number;
+  surname: string;
+}[];
+
+/* type BodyType = {
   email: string;
   password?: string;
 };
@@ -21,17 +32,17 @@ type ErrorResponseType = {
     email?: string;
     password?: string;
   };
-};
+}; */
 
 export const App: FunctionComponent = () => {
   const onReceive = () => console.log("onReceive");
   const onFailure = () => console.log("onFailure");
 
-  const body = {
+  /* const body = {
     email: "alva@gmail.com",
   };
 
-  const { data, isFetching, error, dispatch, clearErrors } = useRequest<
+   const { data, isFetching, error, dispatch, clearErrors } = useRequest<
     LoginResponseType,
     BodyType,
     ErrorResponseType
@@ -39,11 +50,17 @@ export const App: FunctionComponent = () => {
     onReceive,
     onFailure,
     method: "POST",
+  }); */
+
+  const { data, isFetching, error, dispatch, clearErrors } = useRequest<UsersResponse>("user/all", {
+    onReceive,
+    onFailure,
+    intialFetch: true,
   });
 
   return (
     <>
-      <button onClick={() => dispatch(body)}>boton</button>
+      <button onClick={() => dispatch()}>boton</button>
       <button onClick={() => clearErrors()}>Clear errors</button>
       <>
         {isFetching && "fetching"}

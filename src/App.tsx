@@ -1,4 +1,5 @@
 import React, { FunctionComponent } from "react";
+import { login } from "./client/endpoints";
 import { useRequest } from "@/client";
 
 type UsersResponse = {
@@ -43,14 +44,9 @@ export const App: FunctionComponent = () => {
     password: "1234",
   };
 
-  const { data, isFetching, error, dispatch, clearErrors } = useRequest<
-    LoginResponseType,
-    BodyType,
-    ErrorResponseType
-  >("user/login", {
+  const { data, isFetching, error, dispatch, clearErrors } = useRequest<LoginResponseType>(login(body), {
     onReceive,
     onFailure,
-    method: "POST",
   });
 
   /* const { data, isFetching, error, dispatch, clearErrors } = useRequest<UsersResponse>("user/all", {
@@ -62,7 +58,7 @@ export const App: FunctionComponent = () => {
 
   return (
     <>
-      <button onClick={() => dispatch(body)}>boton</button>
+      <button onClick={() => dispatch()}>boton</button>
       <button onClick={() => clearErrors()}>Clear errors</button>
       <>
         {isFetching && "fetching"}

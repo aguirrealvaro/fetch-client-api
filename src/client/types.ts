@@ -6,9 +6,14 @@ export type ErrorResponse<ErrorResponseType = unknown> = {
 export type OptionsType = {
   onReceive?: () => void;
   onFailure?: () => void;
-  method?: MethodType;
   intialFetch?: boolean;
   refetchInterval?: number;
 };
 
 export type MethodType = "GET" | "POST" | "PUT" | "DELETE";
+
+export type EndpointType = {
+  url: string;
+  method: MethodType;
+  body: any;
+};

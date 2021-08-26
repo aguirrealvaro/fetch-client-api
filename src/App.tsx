@@ -29,13 +29,16 @@ export const App: FunctionComponent = () => {
 
   const body = {
     email: "alva@gmail.com",
-    password: "12345",
+    password: "1234",
   };
 
-  const { data, isFetching, error, dispatch, clearErrors } = useRequest<LoginResponseType>(loginUser(body), {
-    onReceive,
-    onFailure,
-  });
+  const { data, isFetching, error, dispatch, clearErrors, disableInterval, enableInterval } =
+    useRequest<LoginResponseType>(loginUser(body), {
+      onReceive,
+      onFailure,
+      intialFetch: true,
+      refetchInterval: 3000,
+    });
 
   /* const { data, isFetching, error, dispatch, clearErrors } = useRequest<UsersResponse>(getUsers(), {
     onReceive,
@@ -46,6 +49,9 @@ export const App: FunctionComponent = () => {
     <>
       <button onClick={() => dispatch()}>Fetch</button>
       <button onClick={() => clearErrors()}>Clear errors</button>
+      <button onClick={() => disableInterval()}>Disable interval</button>
+      <button onClick={() => enableInterval()}>Enable interval</button>
+
       <>
         {isFetching && "fetching"}
         {error && JSON.stringify(error)}

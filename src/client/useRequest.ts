@@ -9,6 +9,8 @@ type UseRequestReturnType<ResponseType> = {
   isFetching: boolean;
   error: ErrorResponse | undefined;
   clearErrors: () => void;
+  disableInterval: () => void;
+  enableInterval: () => void;
 };
 
 export const useRequest = <ResponseType>(
@@ -20,6 +22,8 @@ export const useRequest = <ResponseType>(
     isFetching: false,
     error: undefined,
   });
+
+  const [isIntervalDisabled, setIsIntervalDisabled] = useState<boolean>(false);
 
   const { data, isFetching, error } = state;
 
@@ -59,7 +63,7 @@ export const useRequest = <ResponseType>(
   useEffect(() => {
     if (!intialFetch) return;
     dispatch();
-  }, [dispatch, intialFetch]);
+  }, [intialFetch]);
 
   const clearErrors = useCallback(() => {
     if (!error) return;
@@ -67,13 +71,13 @@ export const useRequest = <ResponseType>(
   }, [error]);
 
   useEffect(() => {
-    if (!intialFetch || !refetchInterval) return;
+    if (!intialFetch || !refetchInterval || isIntervalDisabled) return;
     const timeoutId = setInterval(() => {
       dispatch();
     }, refetchInterval);
 
     return () => clearInterval(timeoutId);
-  }, [dispatch, intialFetch, refetchInterval]);
+  }, [dispatch, intialFetch, refetchInterval, isIntervalDisabled]);
 
   useEffect(() => {
     if (!data) return;
@@ -85,5 +89,15 @@ export const useRequest = <ResponseType>(
     onFailure?.();
   }, [error]);
 
-  return { dispatch, data, isFetching, error, clearErrors };
+  const enableInterval = useCallback(() => {
+    if (!isIntervalDisabled) return;
+    setIsIntervalDisabled(false);
+  }, [isIntervalDisabled]);
+
+  const disableInterval = useCallback(() => {
+    if (isIntervalDisabled) return;
+    setIsIntervalDisabled(true);
+  }, [isIntervalDisabled]);
+
+  return { dispatch, data, isFetching, error, clearErrors, disableInterval, enableInterval };
 };

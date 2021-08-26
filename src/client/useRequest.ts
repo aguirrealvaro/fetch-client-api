@@ -11,8 +11,8 @@ type UseRequestReturnType<ResponseType> = {
   clearErrors: () => void;
 };
 
-export const useRequest = <ResponseType = unknown>(
-  { url, method = "GET", body }: EndpointType<any>,
+export const useRequest = <ResponseType>(
+  { url, method = "GET", body, baseUrl = process.env.API_HOST }: EndpointType,
   { onReceive, onFailure, intialFetch = false, refetchInterval }: OptionsType = {}
 ): UseRequestReturnType<ResponseType> => {
   const [data, setData] = useState<ResponseType | undefined>(undefined);
@@ -31,7 +31,7 @@ export const useRequest = <ResponseType = unknown>(
 
       const config = { method, headers, ...(body && { body: JSON.stringify(body) }) };
 
-      const response = await fetch(`${process.env.API_HOST}/${url}`, config);
+      const response = await fetch(`${baseUrl}/${url}`, config);
       const data = await response.json();
 
       if (response.ok) {
@@ -45,7 +45,7 @@ export const useRequest = <ResponseType = unknown>(
       setError({ statusCode: 0, originalError: err.message });
       setIsFetching(false);
     }
-  }, [body, method, token, url]);
+  }, [baseUrl, body, method, token, url]);
 
   useEffect(() => {
     if (!intialFetch) return;

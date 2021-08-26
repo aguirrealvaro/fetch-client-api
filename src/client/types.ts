@@ -12,8 +12,9 @@ export type OptionsType = {
 
 export type MethodType = "GET" | "POST" | "PUT" | "DELETE";
 
-export type EndpointType<BodyType> = {
+export type EndpointType<BodyType = any> = {
   url: string;
   method?: MethodType;
   body?: BodyType;
+  baseUrl?: string;
 };

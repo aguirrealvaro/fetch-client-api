@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { EndpointType, ErrorResponse, OptionsType } from "./types";
+import { EndpointType, ErrorResponse, OptionsType, StatusType } from "./types";
 
 const LOCAL_STORAGE_KEY = "localStorageKey";
 
@@ -15,14 +15,18 @@ export const useRequest = <ResponseType>(
   { url, method = "GET", body, baseUrl = process.env.API_HOST }: EndpointType,
   { onReceive, onFailure, intialFetch = false, refetchInterval }: OptionsType = {}
 ): UseRequestReturnType<ResponseType> => {
-  const [data, setData] = useState<ResponseType | undefined>(undefined);
-  const [isFetching, setIsFetching] = useState<boolean>(false);
-  const [error, setError] = useState<ErrorResponse | undefined>(undefined);
+  const [state, setState] = useState<StatusType<ResponseType>>({
+    data: undefined,
+    isFetching: false,
+    error: undefined,
+  });
+
+  const { data, isFetching, error } = state;
 
   const token = window.localStorage.getItem(LOCAL_STORAGE_KEY);
 
   const dispatch = useCallback(async () => {
-    setIsFetching(true);
+    setState((state) => ({ ...state, isFetching: true }));
     try {
       const headers = {
         "Content-Type": "application/json",
@@ -35,15 +39,20 @@ export const useRequest = <ResponseType>(
       const data = await response.json();
 
       if (response.ok) {
-        setData(data);
+        setState((state) => ({ ...state, data, isFetching: false }));
       } else {
-        setError({ statusCode: response.status, originalError: data });
+        setState((state) => ({
+          ...state,
+          error: { statusCode: response.status, originalError: data },
+          isFetching: false,
+        }));
       }
-      setIsFetching(false);
     } catch (err) {
-      console.log(err);
-      setError({ statusCode: 0, originalError: err.message });
-      setIsFetching(false);
+      setState((state) => ({
+        ...state,
+        error: { statusCode: 0, originalError: err.message },
+        isFetching: false,
+      }));
     }
   }, [baseUrl, body, method, token, url]);
 
@@ -54,7 +63,7 @@ export const useRequest = <ResponseType>(
 
   const clearErrors = useCallback(() => {
     if (!error) return;
-    setError(undefined);
+    setState((state) => ({ ...state, error: undefined }));
   }, [error]);
 
   useEffect(() => {

@@ -18,3 +18,9 @@ export type EndpointType<BodyType = any> = {
   body?: BodyType;
   baseUrl?: string;
 };
+
+export type StatusType<ResponseType> = {
+  data: ResponseType | undefined;
+  isFetching: boolean;
+  error: ErrorResponse | undefined;
+};

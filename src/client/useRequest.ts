@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { EndpointType, ErrorResponse, OptionsType, StatusType } from "./types";
+import { stringifyUrl } from "./utils";
 
 const LOCAL_STORAGE_KEY = "localStorageKey";
 
@@ -14,7 +15,7 @@ type UseRequestReturnType<ResponseType> = {
 };
 
 export const useRequest = <ResponseType>(
-  { url, method = "GET", body, baseUrl = process.env.API_HOST }: EndpointType,
+  { url, method = "GET", body, baseUrl = process.env.API_HOST, query }: EndpointType,
   { onReceive, onFailure, intialFetch = false, refetchInterval }: OptionsType = {}
 ): UseRequestReturnType<ResponseType> => {
   const [state, setState] = useState<StatusType<ResponseType>>({
@@ -39,7 +40,9 @@ export const useRequest = <ResponseType>(
 
       const config = { method, headers, ...(body && { body: JSON.stringify(body) }) };
 
-      const response = await fetch(`${baseUrl}/${url}`, config);
+      const formattedUrl = query ? stringifyUrl({ url, query }) : url;
+
+      const response = await fetch(`${baseUrl}/${formattedUrl}`, config);
       const data = await response.json();
 
       if (response.ok) {

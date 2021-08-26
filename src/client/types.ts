@@ -17,6 +17,7 @@ export type EndpointType<BodyType = any> = {
   method?: MethodType;
   body?: BodyType;
   baseUrl?: string;
+  query?: Record<string, string>;
 };
 
 export type StatusType<ResponseType> = {

@@ -24,26 +24,15 @@ type LoginResponseType = {
 };
 
 export const App: FunctionComponent = () => {
-  const onReceive = () => console.log("onReceive");
-  const onFailure = () => console.log("onFailure");
-
   const body = {
     email: "alva@gmail.com",
     password: "1234",
   };
 
   const { data, isFetching, error, dispatch, clearErrors, disableInterval, enableInterval } =
-    useRequest<LoginResponseType>(loginUser(body), {
-      onReceive,
-      onFailure,
-      intialFetch: true,
-      refetchInterval: 3000,
-    });
+    useRequest<LoginResponseType>(loginUser(body));
 
-  /* const { data, isFetching, error, dispatch, clearErrors } = useRequest<UsersResponse>(getUsers(), {
-    onReceive,
-    onFailure,
-  }); */
+  /* const { data, isFetching, error, dispatch, clearErrors } = useRequest<UsersResponse>(getUsers()); */
 
   return (
     <>
@@ -51,7 +40,6 @@ export const App: FunctionComponent = () => {
       <button onClick={() => clearErrors()}>Clear errors</button>
       <button onClick={() => disableInterval()}>Disable interval</button>
       <button onClick={() => enableInterval()}>Enable interval</button>
-
       <>
         {isFetching && "fetching"}
         {error && JSON.stringify(error)}

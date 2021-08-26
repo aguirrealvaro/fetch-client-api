@@ -1,4 +1,4 @@
-import { createEndpoint } from "./utils";
+import { createEndpoint, stringifyUrl } from "./utils";
 
 type BodyType = {
   email: string;
@@ -11,6 +11,10 @@ export const loginUser = createEndpoint((body: BodyType) => ({
   body,
 }));
 
-export const getUsers = createEndpoint(() => ({
+/* export const getUsers = createEndpoint(() => ({
   url: "user/all",
+})); */
+
+export const getUsers = createEndpoint(() => ({
+  url: stringifyUrl({ url: "user/all", query: { id: "2", name: "alva" } }),
 }));

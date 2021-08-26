@@ -24,3 +24,8 @@ export type StatusType<ResponseType> = {
   isFetching: boolean;
   error: ErrorResponse | undefined;
 };
+
+export type StringifyUrlType = {
+  url: string;
+  query: Record<string, string>;
+};

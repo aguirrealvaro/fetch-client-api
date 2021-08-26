@@ -40,9 +40,9 @@ export const useRequest = <ResponseType>(
 
       const config = { method, headers, ...(body && { body: JSON.stringify(body) }) };
 
-      const formattedUrl = query ? stringifyUrl({ url, query }) : url;
+      const parsedUrl = query ? stringifyUrl({ url, query }) : url;
 
-      const response = await fetch(`${baseUrl}/${formattedUrl}`, config);
+      const response = await fetch(`${baseUrl}/${parsedUrl}`, config);
       const data = await response.json();
 
       if (response.ok) {

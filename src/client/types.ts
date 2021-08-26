@@ -1,6 +1,6 @@
-export type ErrorResponse<ErrorResponseType = unknown> = {
+export type ErrorResponse = {
   statusCode: number;
-  originalError: ErrorResponseType;
+  originalError: unknown;
 };
 
 export type OptionsType = {
@@ -12,8 +12,8 @@ export type OptionsType = {
 
 export type MethodType = "GET" | "POST" | "PUT" | "DELETE";
 
-export type EndpointType = {
+export type EndpointType<BodyType> = {
   url: string;
-  method: MethodType;
-  body: any;
+  method?: MethodType;
+  body?: BodyType;
 };

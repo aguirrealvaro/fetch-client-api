@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { login } from "./client/endpoints";
+import { loginUser, getUsers } from "./client/endpoints";
 import { useRequest } from "@/client";
 
 type UsersResponse = {
@@ -13,11 +13,6 @@ type UsersResponse = {
   surname: string;
 }[];
 
-type BodyType = {
-  email: string;
-  password: string;
-};
-
 type LoginResponseType = {
   success: string;
   token: string;
@@ -28,37 +23,28 @@ type LoginResponseType = {
   avatar: string;
 };
 
-type ErrorResponseType = {
-  errors: {
-    email?: string;
-    password?: string;
-  };
-};
-
 export const App: FunctionComponent = () => {
   const onReceive = () => console.log("onReceive");
   const onFailure = () => console.log("onFailure");
 
-  const body = {
+  /* const body = {
     email: "alva@gmail.com",
-    password: "1234",
+    password: "12345",
   };
 
-  const { data, isFetching, error, dispatch, clearErrors } = useRequest<LoginResponseType>(login(body), {
+  const { data, isFetching, error, dispatch, clearErrors } = useRequest<LoginResponseType>(loginUser(body), {
+    onReceive,
+    onFailure,
+  }); */
+
+  const { data, isFetching, error, dispatch, clearErrors } = useRequest<UsersResponse>(getUsers(), {
     onReceive,
     onFailure,
   });
 
-  /* const { data, isFetching, error, dispatch, clearErrors } = useRequest<UsersResponse>("user/all", {
-    onReceive,
-    onFailure,
-    intialFetch: true,
-    refetchInterval: 5000,
-  }); */
-
   return (
     <>
-      <button onClick={() => dispatch()}>boton</button>
+      <button onClick={() => dispatch()}>Fetch</button>
       <button onClick={() => clearErrors()}>Clear errors</button>
       <>
         {isFetching && "fetching"}

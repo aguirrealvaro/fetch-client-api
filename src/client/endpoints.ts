@@ -5,8 +5,12 @@ type BodyType = {
   password: string;
 };
 
-export const login = createEndpoint((body: BodyType) => ({
+export const loginUser = createEndpoint((body: BodyType) => ({
   url: "user/login",
   method: "POST",
   body,
+}));
+
+export const getUsers = createEndpoint(() => ({
+  url: "user/all",
 }));

@@ -12,7 +12,7 @@ type UseRequestReturnType<ResponseType> = {
 };
 
 export const useRequest = <ResponseType = unknown>(
-  { url, method = "GET", body }: EndpointType,
+  { url, method = "GET", body }: EndpointType<any>,
   { onReceive, onFailure, intialFetch = false, refetchInterval }: OptionsType = {}
 ): UseRequestReturnType<ResponseType> => {
   const [data, setData] = useState<ResponseType | undefined>(undefined);
@@ -45,7 +45,7 @@ export const useRequest = <ResponseType = unknown>(
       setError({ statusCode: 0, originalError: err.message });
       setIsFetching(false);
     }
-  }, [method, token, url]);
+  }, [body, method, token, url]);
 
   useEffect(() => {
     if (!intialFetch) return;

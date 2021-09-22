@@ -28,8 +28,10 @@ export const useMock = <ResponseType, OriginalErrorType>(
   };
 
   useEffect(() => {
-    return () => clearTimeout(timeoutRef.current);
-  });
+    return () => {
+      clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   return { mockDispatch };
 };

@@ -57,7 +57,7 @@ export const useRequest = <ResponseType>(
     } catch (err) {
       setState((state) => ({
         ...state,
-        error: { statusCode: 0, originalError: err.message },
+        error: { statusCode: 0, originalError: (err as Error).message },
         isFetching: false,
       }));
     }

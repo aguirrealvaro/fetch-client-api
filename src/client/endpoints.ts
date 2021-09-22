@@ -15,3 +15,8 @@ export const getUsers = createEndpoint(() => ({
   url: "user/all",
   method: "GET",
 }));
+
+export const getCurrent = createEndpoint(() => ({
+  url: "user/current",
+  method: "GET",
+}));

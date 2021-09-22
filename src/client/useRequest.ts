@@ -2,8 +2,6 @@ import { useState, useCallback, useEffect } from "react";
 import { EndpointType, ErrorResponse, OptionsType, StatusType } from "./types";
 import { stringifyUrl } from "./utils";
 
-const LOCAL_STORAGE_KEY = "localStorageKey";
-
 type UseRequestReturnType<ResponseType, ErrorType> = {
   dispatch: () => Promise<void>;
   data: ResponseType | undefined;
@@ -28,7 +26,7 @@ export const useRequest = <ResponseType = any, ErrorType = unknown>(
 
   const { data, isFetching, error } = state;
 
-  const token = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+  const token = window.localStorage.getItem(process.env.LOCAL_STORAGE_KEY || "");
 
   const dispatch = useCallback(async () => {
     setState((state) => ({ ...state, isFetching: true }));

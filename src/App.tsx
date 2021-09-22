@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { loginUser, getUsers } from "./client/endpoints";
+import { loginUser, getUsers, getCurrent } from "./client/endpoints";
 import { useRequest } from "@/client";
 
 type UsersResponse = {
@@ -31,7 +31,9 @@ export const App: FunctionComponent = () => {
 
   //const { data, isFetching, error, dispatch, clearErrors } = useRequest<LoginResponseType>(loginUser(body));
 
-  const { data, isFetching, error, dispatch, clearErrors } = useRequest(getUsers());
+  const { data, isFetching, error, dispatch, clearErrors } = useRequest<UsersResponse>(getUsers());
+
+  //const { data, isFetching, error, dispatch, clearErrors } = useRequest(getCurrent());
 
   return (
     <>

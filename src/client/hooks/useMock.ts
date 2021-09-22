@@ -1,4 +1,4 @@
-import { Dispatch } from "react";
+import { Dispatch, useEffect, useRef } from "react";
 import { ErrorResponseType, MockType, StatusType } from "../types";
 
 type UseMockReturnType = {
@@ -9,11 +9,14 @@ export const useMock = <ResponseType, OriginalErrorType>(
   mock: MockType<ResponseType | ErrorResponseType> | undefined,
   setState: Dispatch<React.SetStateAction<StatusType<ResponseType, OriginalErrorType>>>
 ): UseMockReturnType => {
+  const timeoutRef = useRef<number>(0);
+
   const mockDispatch = () => {
     if (!mock) return;
     const { status, data, timeout } = mock;
     setState((state) => ({ ...state, isFetching: true }));
-    setTimeout(() => {
+
+    timeoutRef.current = window.setTimeout(() => {
       setState((state) => ({
         ...state,
         isFetching: false,
@@ -23,6 +26,10 @@ export const useMock = <ResponseType, OriginalErrorType>(
       }));
     }, timeout);
   };
+
+  useEffect(() => {
+    return () => clearTimeout(timeoutRef.current);
+  });
 
   return { mockDispatch };
 };

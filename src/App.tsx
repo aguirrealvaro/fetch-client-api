@@ -29,11 +29,11 @@ export const App: FunctionComponent = () => {
     password: "1234",
   };
 
-  const { data, isFetching, error, dispatch, clearErrors } = useRequest<LoginResponseType>(loginUser(body));
+  //const { data, isFetching, error, dispatch, clearErrors } = useRequest<LoginResponseType>(loginUser(body));
 
-  /* const { data, isFetching, error, dispatch, clearErrors, disableInterval } = useRequest<UsersResponse>(
+  const { data, isFetching, error, dispatch, clearErrors, disableInterval } = useRequest<UsersResponse>(
     getUsers()
-  ); */
+  );
 
   return (
     <>

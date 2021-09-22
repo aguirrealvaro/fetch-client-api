@@ -1,4 +1,4 @@
-export type ErrorResponse<ErrorType> = {
+export type ErrorResponse<ErrorType = unknown> = {
   statusCode: number;
   originalError?: ErrorType;
 };
@@ -18,6 +18,7 @@ export type EndpointType<BodyType = any> = {
   body?: BodyType;
   baseUrl?: string;
   query?: Record<string, string>;
+  mock?: MockType<BodyType>;
 };
 
 export type StatusType<ResponseType, ErrorType> = {
@@ -29,4 +30,10 @@ export type StatusType<ResponseType, ErrorType> = {
 export type StringifyUrlType = {
   url: string;
   query: Record<string, string>;
+};
+
+export type MockType<DataType> = {
+  status: "success" | "failure";
+  data: DataType | ErrorResponse;
+  timeout: number;
 };

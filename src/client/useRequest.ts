@@ -59,12 +59,12 @@ export const useRequest = <ResponseType = any, ErrorType = unknown>(
         isFetching: false,
       }));
     }
-  }, [baseUrl, body, method, token, url]);
+  }, [baseUrl, method, token, url, query]);
 
   useEffect(() => {
     if (!intialFetch) return;
     dispatch();
-  }, [intialFetch]);
+  }, [dispatch, intialFetch]);
 
   const clearErrors = useCallback(() => {
     if (!error) return;

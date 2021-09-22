@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { loginUser, getUsers, getCurrent } from "./client/endpoints";
+import { loginUser, getUsers } from "./client/endpoints";
 import { useRequest } from "@/client";
 
 type UsersResponse = {
@@ -29,16 +29,24 @@ export const App: FunctionComponent = () => {
     password: "1234",
   };
 
-  //const { data, isFetching, error, dispatch, clearErrors } = useRequest<LoginResponseType>(loginUser(body));
+  /* const { data, isFetching, error, dispatch, clearErrors } = useRequest<LoginResponseType>(loginUser(body), {
+    intialFetch: true,
+  }); */
 
-  const { data, isFetching, error, dispatch, clearErrors } = useRequest<UsersResponse>(getUsers());
-
-  //const { data, isFetching, error, dispatch, clearErrors } = useRequest(getCurrent());
+  const { data, isFetching, error, dispatch, clearErrors, disableInterval } = useRequest<UsersResponse>(
+    getUsers(),
+    {
+      intialFetch: true,
+      refetchInterval: 3000,
+      onReceive: () => console.log("on receive"),
+    }
+  );
 
   return (
     <>
-      <button onClick={() => dispatch()}>Fetch</button>
-      <button onClick={() => clearErrors()}>Clear errors</button>
+      <button onClick={dispatch}>Fetch</button>
+      <button onClick={clearErrors}>Clear errors</button>
+      <button onClick={disableInterval}>Disable interval</button>
       <>
         {isFetching && "fetching"}
         {error && JSON.stringify(error)}

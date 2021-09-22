@@ -1,6 +1,6 @@
-export type ErrorResponse<ErrorType = unknown> = {
+export type ErrorResponseType<OriginalErrorType = unknown> = {
   statusCode: number;
-  originalError?: ErrorType;
+  originalError?: OriginalErrorType;
 };
 
 export type OptionsType = {
@@ -21,10 +21,10 @@ export type EndpointType<BodyType = any> = {
   mock?: MockType<BodyType>;
 };
 
-export type StatusType<ResponseType, ErrorType> = {
+export type StatusType<ResponseType, OriginalErrorType> = {
   data: ResponseType | undefined;
   isFetching: boolean;
-  error: ErrorResponse<ErrorType> | undefined;
+  error: ErrorResponseType<OriginalErrorType> | undefined;
 };
 
 export type StringifyUrlType = {
@@ -34,6 +34,6 @@ export type StringifyUrlType = {
 
 export type MockType<DataType> = {
   status: "success" | "failure";
-  data: DataType | ErrorResponse;
+  data: DataType | ErrorResponseType;
   timeout: number;
 };

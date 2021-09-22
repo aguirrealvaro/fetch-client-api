@@ -1,24 +1,24 @@
 import { camelizeKeys } from "humps";
 import { useState, useCallback, useEffect } from "react";
 import { useIntervalFetching, useMock } from "./hooks";
-import { EndpointType, ErrorResponse, OptionsType, StatusType } from "./types";
+import { EndpointType, ErrorResponseType, OptionsType, StatusType } from "./types";
 import { stringifyUrl } from "./utils";
 
-type UseRequestReturnType<ResponseType, ErrorType> = {
+type UseRequestReturnType<ResponseType, OriginalErrorType> = {
   dispatch: (() => Promise<void>) | (() => void);
   data: ResponseType | undefined;
   isFetching: boolean;
-  error: ErrorResponse<ErrorType> | undefined;
+  error: ErrorResponseType<OriginalErrorType> | undefined;
   clearErrors: () => void;
   disableInterval: () => void;
   enableInterval: () => void;
 };
 
-export const useRequest = <ResponseType = any, ErrorType = unknown>(
+export const useRequest = <ResponseType = any, OriginalErrorType = unknown>(
   { url, method = "GET", body, baseUrl = process.env.API_HOST, query, mock }: EndpointType,
   { onReceive, onFailure, intialFetch = false, refetchInterval }: OptionsType = {}
-): UseRequestReturnType<ResponseType, ErrorType> => {
-  const [state, setState] = useState<StatusType<ResponseType, ErrorType>>({
+): UseRequestReturnType<ResponseType, OriginalErrorType> => {
+  const [state, setState] = useState<StatusType<ResponseType, OriginalErrorType>>({
     data: undefined,
     isFetching: false,
     error: undefined,
@@ -87,7 +87,7 @@ export const useRequest = <ResponseType = any, ErrorType = unknown>(
 
   const { enableInterval, disableInterval } = useIntervalFetching(dispatch, intialFetch, refetchInterval);
 
-  const { mockDispatch } = useMock<ResponseType, ErrorType>(mock, setState);
+  const { mockDispatch } = useMock<ResponseType, OriginalErrorType>(mock, setState);
 
   return {
     dispatch: mock ? mockDispatch : dispatch,

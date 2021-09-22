@@ -1,3 +1,4 @@
+import { camelizeKeys } from "humps";
 import { useState, useCallback, useEffect } from "react";
 import { useIntervalFetching } from "./hooks";
 import { EndpointType, ErrorResponse, OptionsType, StatusType } from "./types";
@@ -43,7 +44,11 @@ export const useRequest = <ResponseType = any, ErrorType = unknown>(
       const data = await response.json();
 
       if (response.ok) {
-        setState((state) => ({ ...state, data, isFetching: false }));
+        setState((state) => ({
+          ...state,
+          data: camelizeKeys(data) as unknown as ResponseType,
+          isFetching: false,
+        }));
       } else {
         setState((state) => ({
           ...state,
@@ -70,8 +75,6 @@ export const useRequest = <ResponseType = any, ErrorType = unknown>(
     setState((state) => ({ ...state, error: undefined }));
   }, [error]);
 
-  const { enableInterval, disableInterval } = useIntervalFetching(dispatch, intialFetch, refetchInterval);
-
   useEffect(() => {
     if (!data) return;
     onReceive?.();
@@ -81,6 +84,8 @@ export const useRequest = <ResponseType = any, ErrorType = unknown>(
     if (!error) return;
     onFailure?.();
   }, [error]);
+
+  const { enableInterval, disableInterval } = useIntervalFetching(dispatch, intialFetch, refetchInterval);
 
   return { dispatch, data, isFetching, error, clearErrors, disableInterval, enableInterval };
 };

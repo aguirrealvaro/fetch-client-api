@@ -1,3 +1,4 @@
+import { decamelizeKeys } from "humps";
 import { createEndpoint } from "./utils";
 
 type BodyType = {
@@ -8,7 +9,7 @@ type BodyType = {
 export const loginUser = createEndpoint((body: BodyType) => ({
   url: "user/login",
   method: "POST",
-  body,
+  body: decamelizeKeys(body),
 }));
 
 export const getUsers = createEndpoint(() => ({

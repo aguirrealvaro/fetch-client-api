@@ -31,7 +31,7 @@ export const App: FunctionComponent = () => {
 
   //const { data, isFetching, error, dispatch, clearErrors } = useRequest<LoginResponseType>(loginUser(body));
 
-  const { data, isFetching, error, dispatch, clearErrors } = useRequest<UsersResponse>(getUsers());
+  const { data, isFetching, error, dispatch, clearErrors } = useRequest(getUsers());
 
   return (
     <>

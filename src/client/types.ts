@@ -1,6 +1,6 @@
-export type ErrorResponse = {
+export type ErrorResponse<ErrorType> = {
   statusCode: number;
-  originalError: unknown;
+  originalError?: ErrorType;
 };
 
 export type OptionsType = {
@@ -20,10 +20,10 @@ export type EndpointType<BodyType = any> = {
   query?: Record<string, string>;
 };
 
-export type StatusType<ResponseType> = {
+export type StatusType<ResponseType, ErrorType> = {
   data: ResponseType | undefined;
   isFetching: boolean;
-  error: ErrorResponse | undefined;
+  error: ErrorResponse<ErrorType> | undefined;
 };
 
 export type StringifyUrlType = {

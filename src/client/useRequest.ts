@@ -4,21 +4,21 @@ import { stringifyUrl } from "./utils";
 
 const LOCAL_STORAGE_KEY = "localStorageKey";
 
-type UseRequestReturnType<ResponseType> = {
+type UseRequestReturnType<ResponseType, ErrorType> = {
   dispatch: () => Promise<void>;
   data: ResponseType | undefined;
   isFetching: boolean;
-  error: ErrorResponse | undefined;
+  error: ErrorResponse<ErrorType> | undefined;
   clearErrors: () => void;
   disableInterval: () => void;
   enableInterval: () => void;
 };
 
-export const useRequest = <ResponseType>(
+export const useRequest = <ResponseType = any, ErrorType = unknown>(
   { url, method = "GET", body, baseUrl = process.env.API_HOST, query }: EndpointType,
   { onReceive, onFailure, intialFetch = false, refetchInterval }: OptionsType = {}
-): UseRequestReturnType<ResponseType> => {
-  const [state, setState] = useState<StatusType<ResponseType>>({
+): UseRequestReturnType<ResponseType, ErrorType> => {
+  const [state, setState] = useState<StatusType<ResponseType, ErrorType>>({
     data: undefined,
     isFetching: false,
     error: undefined,
@@ -57,7 +57,7 @@ export const useRequest = <ResponseType>(
     } catch (err) {
       setState((state) => ({
         ...state,
-        error: { statusCode: 0, originalError: (err as Error).message },
+        error: { statusCode: 0 },
         isFetching: false,
       }));
     }

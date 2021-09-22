@@ -1,0 +1,1 @@
+export { useIntervalFetching } from "./useIntervalFetching";

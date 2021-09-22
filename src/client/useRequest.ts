@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+import { useIntervalFetching } from "./hooks";
 import { EndpointType, ErrorResponse, OptionsType, StatusType } from "./types";
 import { stringifyUrl } from "./utils";
 
@@ -21,8 +22,6 @@ export const useRequest = <ResponseType = any, ErrorType = unknown>(
     isFetching: false,
     error: undefined,
   });
-
-  const [isIntervalDisabled, setIsIntervalDisabled] = useState<boolean>(false);
 
   const { data, isFetching, error } = state;
 
@@ -71,14 +70,7 @@ export const useRequest = <ResponseType = any, ErrorType = unknown>(
     setState((state) => ({ ...state, error: undefined }));
   }, [error]);
 
-  useEffect(() => {
-    if (!intialFetch || !refetchInterval || isIntervalDisabled) return;
-    const timeoutId = setInterval(() => {
-      dispatch();
-    }, refetchInterval);
-
-    return () => clearInterval(timeoutId);
-  }, [dispatch, intialFetch, refetchInterval, isIntervalDisabled]);
+  const { enableInterval, disableInterval } = useIntervalFetching(dispatch, intialFetch, refetchInterval);
 
   useEffect(() => {
     if (!data) return;
@@ -89,16 +81,6 @@ export const useRequest = <ResponseType = any, ErrorType = unknown>(
     if (!error) return;
     onFailure?.();
   }, [error]);
-
-  const enableInterval = useCallback(() => {
-    if (!isIntervalDisabled) return;
-    setIsIntervalDisabled(false);
-  }, [isIntervalDisabled]);
-
-  const disableInterval = useCallback(() => {
-    if (isIntervalDisabled) return;
-    setIsIntervalDisabled(true);
-  }, [isIntervalDisabled]);
 
   return { dispatch, data, isFetching, error, clearErrors, disableInterval, enableInterval };
 };

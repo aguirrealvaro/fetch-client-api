@@ -38,7 +38,6 @@ export const App: FunctionComponent = () => {
     {
       intialFetch: true,
       refetchInterval: 3000,
-      onReceive: () => console.log("on receive"),
     }
   );
 

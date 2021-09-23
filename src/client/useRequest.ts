@@ -1,6 +1,7 @@
 import { camelizeKeys } from "humps";
 import { useState, useCallback, useEffect } from "react";
 import { useIntervalFetching, useMock } from "./hooks";
+import { useAfterFetch } from "./hooks/useAfterFetch";
 import { EndpointType, ErrorResponseType, OptionsType, StatusType } from "./types";
 import { stringifyUrl } from "./utils";
 
@@ -75,15 +76,7 @@ export const useRequest = <ResponseType = any, OriginalErrorType = unknown>(
     setState((state) => ({ ...state, error: undefined }));
   }, [error]);
 
-  useEffect(() => {
-    if (!data) return;
-    onReceive?.();
-  }, [data]);
-
-  useEffect(() => {
-    if (!error) return;
-    onFailure?.();
-  }, [error]);
+  useAfterFetch<ResponseType, OriginalErrorType>(data, error, onReceive, onFailure);
 
   const { enableInterval, disableInterval } = useIntervalFetching(dispatch, intialFetch, refetchInterval);
 

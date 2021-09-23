@@ -32,7 +32,7 @@ const data = [
     id: "5e92ca7cbaf48a17dc32b42e",
     email: "fer@gmail.com",
     password: "$2a$10$riT65cUXpD3ZxuxhTYoE.uNfPjQeVvxoyJ1CWJ7/.4og..KF1cbZW",
-    name: "fer",
+    name: "alva2",
     surname: "aguirre",
     createdAt: "2020-04-12T07:59:56.791Z",
     v: 0,
@@ -42,11 +42,11 @@ const data = [
 export const getUsers = createEndpoint(() => ({
   url: "user/all",
   method: "GET",
-  mock: {
+  /* mock: {
     status: "success",
     data,
     timeout: 2000,
-  },
+  }, */
 }));
 
 export const getCurrent = createEndpoint(() => ({

@@ -32,7 +32,8 @@ export const App: FunctionComponent = () => {
   //const { data, isFetching, error, dispatch, clearErrors } = useRequest<LoginResponseType>(loginUser(body));
 
   const { data, isFetching, error, dispatch, clearErrors, disableInterval } = useRequest<UsersResponse>(
-    getUsers()
+    getUsers(),
+    { onReceive: () => console.log("On receive") }
   );
 
   return (
